@@ -1,0 +1,11 @@
+ShopServer:
+  Host: 127.0.0.1
+  Port: 8080
+
+LoginServer:
+  Host: 127.0.0.1
+  Port: 7070
+
+LogOutServer:
+  Host: 127.0.0.1
+  Port: 9090
