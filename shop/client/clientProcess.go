@@ -1,14 +1,14 @@
 package client
 
 import (
-	"fmt"
-	"encoding/json"
-	"context"
 	"common/http"
-	"io/ioutil"
-	"shop/config"
-	"shop/common"
+	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
+	"shop/common"
+	"shop/config"
 
 	"github.com/tal-tech/go-zero/core/logx"
 )
@@ -38,7 +38,7 @@ func clientLogin(userInfo *common.UserInfo) error {
 
 	if string(res) == "passwd is false!" {
 		fmt.Println(string(res))
-		return errors.New("passwd is false!")
+		return err
 	}
 
 	fmt.Println(string(res))
@@ -72,7 +72,7 @@ func clientLogout(userInfo *common.UserInfo) error {
 	return nil
 }
 
-func clientCheck(userInfo *common.UserInfo, params map[string]interface{}) error {
+func clientCheck(userInfo *common.UserInfo, params map[string]interface{}, checkType string) error {
 	data, err := json.Marshal(userInfo)
 	if err != nil {
 		logx.Errorf("decode json failed: %s", err)
@@ -82,7 +82,19 @@ func clientCheck(userInfo *common.UserInfo, params map[string]interface{}) error
 	client := http.NewHttpClient(context.Background(), nil)
 	shopHost := config.Servers.ShopServer.Host
 	shopPort := config.Servers.ShopServer.Port
-	url := client.BuildUrl(shopHost, shopPort, "/shop/data/check", params)
+
+	var url string
+	switch checkType {
+	case "balance":
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/balance", params)
+	case "shopList":
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/shopList", params)
+	case "orderList":
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/orderList", params)
+	default:
+		return errors.New("unknown type")
+	}
+
 	resp, err := client.Request(url, "get", data)
 	if err != nil {
 		logx.Errorf("get data check result failed: %s", err)

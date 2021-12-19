@@ -34,9 +34,11 @@ func startListenLogout() {
 func startListenShopProcess() {
 	shopHost := config.Servers.ShopServer.Host
 	shopPort := config.Servers.ShopServer.Port
-	http.HandleFunc("/shop/data/check", serverDataCheck)
-	http.HandleFunc("/shop/data/order", serverDataOrder)
-	http.HandleFunc("/shop/data/recharge", serverDataRecharge)
+	http.HandleFunc("/shop/data/check/balance", logCheck(serverCheckBalance))
+	http.HandleFunc("/shop/data/check/orderList", logCheck(serverCheckOrderList))
+	http.HandleFunc("/shop/data/check/shopList", logCheck(serverCheckShopList))
+	http.HandleFunc("/shop/data/order", logCheck(serverDataOrder))
+	http.HandleFunc("/shop/data/recharge", logCheck(serverDataRecharge))
 	server := fmt.Sprintf("%s:%s", shopHost, shopPort)
 	http.ListenAndServe(server, nil)
 }

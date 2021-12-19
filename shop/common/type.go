@@ -1,7 +1,7 @@
 package common
 
 // UserInfoPATH 密码文件路径
-const UserInfoPATH = "./dataRecord/userInfo"
+const UserInfoPATH = "./dataRecord/user_info"
 
 type UserInfo struct {
 	Name   string
@@ -16,7 +16,6 @@ type RechargeRequestParams struct {
 
 type CheckRequestParams struct {
 	ID   string `form:"id"`
-	Type string `form:"type"`
 }
 
 type OrderRequestParams struct {

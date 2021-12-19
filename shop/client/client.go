@@ -45,7 +45,7 @@ func logoutProcess() error {
 }
 
 func checkProcess() error {
-	params := make(map[string]interface{}, 2)
+	params := make(map[string]interface{}, 1)
     
 	var id, checkType string
 	fmt.Println("Please enter your ID of checking:")
@@ -54,10 +54,8 @@ func checkProcess() error {
 
 	fmt.Println("Please enter your type of checking:")
 	fmt.Scanln(&checkType)
-	params["type"] = checkType
-	
 
-	err := clientCheck(&userInfo, params)
+	err := clientCheck(&userInfo, params, checkType)
 	if err != nil {
 		return err
 	}
