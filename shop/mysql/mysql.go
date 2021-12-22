@@ -10,26 +10,25 @@ import (
 )
 
 type myDB struct {
-	DB  *sql.DB
-	user string
-	passwd string
-	port string
+	DB       *sql.DB
+	user     string
+	passwd   string
+	port     string
 	database string
 }
 
 type ShopProduct struct {
-	ID float64 `db:"id"`
+	ID         float64 `db:"id"`
 	CategoryID float64 `db:"category_id"`
-	Title string `db:"title"`
-	Price float64 `db:"price"`
+	Title      string  `db:"title"`
+	Price      float64 `db:"price"`
 }
 
 const (
-	user = "admin"
-	passwd = "admin123"
-	port = "3306"
+	user     = "admin"
+	passwd   = "admin123"
+	port     = "3306"
 	database = "mysql"
-
 )
 
 func NewDB() (*myDB, error) {
@@ -102,21 +101,37 @@ func (myDB *myDB) Query(cmd string) ([]map[string]string, error) {
 	return result, nil
 }
 
-/*
-func main() {
-	myDB, err := NewDB()
-	if err != nil {
-		return
+func (myDB *myDB) QueryUserInfo(id string) ([]map[string]string, error) {
+	var cmd string
+	if id == "all" {
+		cmd = fmt.Sprintf(`select * from Info`)
 	}
-
-	myDB.ExecDel("tables", "id", 3)
-
-	usrInfo := UserInfo{}
-	rows, err := myDB.Query("select * from tables")
-	for rows.Next() {
-		rows.Scan(&usrInfo.id, &usrInfo.name)
-		fmt.Println(usrInfo)
-	}
-	myDB.db.Close()
+	cmd = fmt.Sprintf(`select * from Info where id="%s"`, id)
+	return myDB.Query(cmd)
 }
-*/
+
+func (myDB *myDB) QueryProductInfo(id string) ([]map[string]string, error) {
+	var cmd string
+	if id == "all" {
+		cmd = fmt.Sprintf(`select * from product`)
+	}
+	cmd = fmt.Sprintf(`select * from product where id="%s"`, id)
+	return myDB.Query(cmd)
+}
+
+func (myDB *myDB) QueryOrderInfo(id string) ([]map[string]string, error) {
+	var cmd string
+	if id == "all" {
+		cmd = fmt.Sprintf(`select * from orders`)
+	}
+	cmd = fmt.Sprintf(`select * from orders where user_id="%s"`, id)
+	return myDB.Query(cmd)
+}
+
+func (myDB *myDB) UpdateBalance(balance float64, id string) {
+	myDB.ExecUpdate("Info", "balance", "id", balance, id)
+}
+
+func (myDB *myDB) InsertOrder(keys []string, values ...interface{}) {
+	myDB.ExecInsert("orders", keys, values...)
+}

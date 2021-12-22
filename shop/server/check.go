@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"shop/common"
 	"shop/mysql"
@@ -19,8 +18,7 @@ func checkBalance(params *common.CheckRequestParams) ([]byte, error) {
 	}
 	defer db.DB.Close()
 
-	mysqlCmd := fmt.Sprintf(`select * from Info where id="%s"`, params.ID)
-	userBalance, err := db.Query(mysqlCmd)
+	userBalance, err := db.QueryUserInfo(params.ID)
 	if err != nil {
 		logx.Errorf("get balance failed: %s", err)
 		return nil, err
@@ -48,8 +46,7 @@ func checkOrderList(params *common.CheckRequestParams) ([]byte, error) {
 	}
 	defer db.DB.Close()
 
-	mysqlCmd := fmt.Sprintf(`select * from orders where user_id="%s"`, params.ID)
-	orderList, err := db.Query(mysqlCmd)
+	orderList, err := db.QueryOrderInfo(params.ID)
 	if err != nil {
 		logx.Errorf("get orderList failed: %s", err)
 		return nil, err
@@ -76,8 +73,7 @@ func checkShopList(params *common.CheckRequestParams) ([]byte, error) {
 	}
 	defer db.DB.Close()
 
-	mysqlCmd := fmt.Sprintf("select * from product")
-	shopList, err := db.Query(mysqlCmd)
+	shopList, err := db.QueryProductInfo("all")
 	if err != nil {
 		logx.Errorf("get shopList failed: %s", err)
 		return nil, err

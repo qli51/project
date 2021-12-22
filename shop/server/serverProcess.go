@@ -31,8 +31,8 @@ func parseUserInfo(request *http.Request, record *common.UserInfo) error {
 	return nil
 }
 
-// logCheck 中间键，用于检测用户的有效性
-func logCheck(f http.HandlerFunc) http.HandlerFunc {
+// preChecking 中间键，用于检测用户的有效性
+func preChecking(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var record common.UserInfo
 		err := parseUserInfo(r, &record)
@@ -87,7 +87,7 @@ func serverLogout(writer http.ResponseWriter, request *http.Request) {
 	writer.Write([]byte("log out success!"))
 }
 
-func serverCheckBalance(writer http.ResponseWriter, request *http.Request) {
+func serverGetBalance(writer http.ResponseWriter, request *http.Request) {
 	params := common.CheckRequestParams{}
 	if err := httpx.Parse(request, &params); err != nil {
 		logx.Errorf("get data failed: %s", err)
@@ -103,7 +103,7 @@ func serverCheckBalance(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(data)
 }
 
-func serverCheckOrderList(writer http.ResponseWriter, request *http.Request) {
+func serverGetOrderList(writer http.ResponseWriter, request *http.Request) {
 	params := common.CheckRequestParams{}
 	if err := httpx.Parse(request, &params); err != nil {
 		logx.Errorf("get data failed: %s", err)
@@ -119,7 +119,7 @@ func serverCheckOrderList(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(data)
 }
 
-func serverCheckShopList(writer http.ResponseWriter, request *http.Request) {
+func serverGetShopList(writer http.ResponseWriter, request *http.Request) {
 	params := common.CheckRequestParams{}
 	if err := httpx.Parse(request, &params); err != nil {
 		logx.Errorf("get data failed: %s", err)
@@ -135,14 +135,14 @@ func serverCheckShopList(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(data)
 }
 
-func serverDataOrder(writer http.ResponseWriter, request *http.Request) {
+func serverOrder(writer http.ResponseWriter, request *http.Request) {
 	params := common.OrderRequestParams{}
 	if err := httpx.Parse(request, &params); err != nil {
 		logx.Errorf("get data failed: %s", err)
 		return
 	}
 
-	err := dataOrder(&params)
+	err := orderProduct(&params)
 	if err != nil {
 		failedStr := fmt.Sprintf("order failed: %s!", err)
 		writer.Write([]byte(failedStr))
@@ -151,14 +151,14 @@ func serverDataOrder(writer http.ResponseWriter, request *http.Request) {
 	writer.Write([]byte("order success!"))
 }
 
-func serverDataRecharge(writer http.ResponseWriter, request *http.Request) {
+func serverRecharge(writer http.ResponseWriter, request *http.Request) {
 	params := common.RechargeRequestParams{}
 	if err := httpx.Parse(request, &params); err != nil {
 		logx.Errorf("get data failed: %s", err)
 		return
 	}
 
-	err := dataRecharge(&params)
+	err := rechargeBalance(&params)
 	if err != nil {
 		failedStr := fmt.Sprintf("recharge failed: %s!", err)
 		writer.Write([]byte(failedStr))

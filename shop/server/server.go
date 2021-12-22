@@ -1,8 +1,8 @@
 package server
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 	"sync"
 
 	"shop/config"
@@ -34,11 +34,11 @@ func startListenLogout() {
 func startListenShopProcess() {
 	shopHost := config.Servers.ShopServer.Host
 	shopPort := config.Servers.ShopServer.Port
-	http.HandleFunc("/shop/data/check/balance", logCheck(serverCheckBalance))
-	http.HandleFunc("/shop/data/check/orderList", logCheck(serverCheckOrderList))
-	http.HandleFunc("/shop/data/check/shopList", logCheck(serverCheckShopList))
-	http.HandleFunc("/shop/data/order", logCheck(serverDataOrder))
-	http.HandleFunc("/shop/data/recharge", logCheck(serverDataRecharge))
+	http.HandleFunc("/shop/data/balance", preChecking(serverGetBalance))
+	http.HandleFunc("/shop/data/orderList", preChecking(serverGetOrderList))
+	http.HandleFunc("/shop/data/shopList", preChecking(serverGetShopList))
+	http.HandleFunc("/shop/order", preChecking(serverOrder))
+	http.HandleFunc("/shop/recharge", preChecking(serverRecharge))
 	server := fmt.Sprintf("%s:%s", shopHost, shopPort)
 	http.ListenAndServe(server, nil)
 }

@@ -86,11 +86,11 @@ func clientCheck(userInfo *common.UserInfo, params map[string]interface{}, check
 	var url string
 	switch checkType {
 	case "balance":
-		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/balance", params)
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/balance", params)
 	case "shopList":
-		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/shopList", params)
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/shopList", params)
 	case "orderList":
-		url = client.BuildUrl(shopHost, shopPort, "/shop/data/check/orderList", params)
+		url = client.BuildUrl(shopHost, shopPort, "/shop/data/orderList", params)
 	default:
 		return errors.New("unknown type")
 	}
@@ -121,7 +121,7 @@ func clientRecharge(userInfo *common.UserInfo, params map[string]interface{}) er
 	client := http.NewHttpClient(context.Background(), nil)
 	shopHost := config.Servers.ShopServer.Host
 	shopPort := config.Servers.ShopServer.Port
-	url := client.BuildUrl(shopHost, shopPort, "/shop/data/recharge", params)
+	url := client.BuildUrl(shopHost, shopPort, "/shop/recharge", params)
 	resp, err := client.Request(url, "set", data)
 	if err != nil {
 		logx.Errorf("get data recharge result failed: %s", err)
@@ -148,7 +148,7 @@ func clientOrder(userInfo *common.UserInfo, params map[string]interface{}) error
 	client := http.NewHttpClient(context.Background(), nil)
 	shopHost := config.Servers.ShopServer.Host
 	shopPort := config.Servers.ShopServer.Port
-	url := client.BuildUrl(shopHost, shopPort, "/shop/data/order", params)
+	url := client.BuildUrl(shopHost, shopPort, "/shop/order", params)
 	resp, err := client.Request(url, "set", data)
 	if err != nil {
 		logx.Errorf("get data order result failed: %s", err)
